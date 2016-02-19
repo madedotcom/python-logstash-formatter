@@ -16,6 +16,17 @@ Manual::
 
     python setup.py install
 
+
+Running tests
+-------------
+For example:
+
+virtualenv /tmp/ve
+<enter virtual env>
+pip install nose
+nosetests tests/test_log_message_positional_placeholder.py
+
+
 Usage
 -----
 
