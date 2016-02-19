@@ -24,7 +24,8 @@ class LogMessagePositionalPlaceholderTest(unittest.TestCase):
 test_msgs = {
     'normal_log_message': 'foo',
     'implicit_positional_placeholder': '{}',
-    'explicit_positional_placeholder': '{0}'
+    'explicit_positional_placeholder': '{0}',
+    'unbalanced_curly_brace': '{'
 }
 
 
