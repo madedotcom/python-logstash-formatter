@@ -66,11 +66,10 @@ class LogstashFormatter(logging.Formatter):
         assume an empty message and use the dict as additional
         fields.
         """
+        record.message = record.getMessage()
         fields = record.__dict__.copy()
-        msg = record.getMessage()
-
-        if 'msg' in fields:
-            fields.pop('msg')
+        fields.pop('msg', None)
+        fields.pop('message', None)
 
         if 'exc_info' in fields:
             if fields['exc_info']:
@@ -83,7 +82,7 @@ class LogstashFormatter(logging.Formatter):
 
         record_dict = self.defaults.copy()
         record_dict.update({
-            '@message': msg,
+            '@message': record.message,
             '@timestamp': datetime.datetime.utcnow().strftime(
                 '%Y-%m-%dT%H:%M:%S.%fZ'
             ),
