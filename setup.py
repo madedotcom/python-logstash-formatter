@@ -2,9 +2,11 @@ import codecs
 from setuptools import setup, find_packages
 from os import path
 
+
 def read(*parts):
     return codecs.open(path.join(path.dirname(__file__), *parts),
                        encoding="utf-8").read()
+
 
 setup(name='logstash_formatter',
       version='0.5.14',

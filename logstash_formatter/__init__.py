@@ -9,6 +9,7 @@ import datetime
 import traceback as tb
 import json
 
+
 def _default_json_default(obj):
     """
     Coerce everything to strings.
@@ -18,6 +19,7 @@ def _default_json_default(obj):
         return obj.isoformat()
     else:
         return str(obj)
+
 
 class LogstashFormatter(logging.Formatter):
     """
