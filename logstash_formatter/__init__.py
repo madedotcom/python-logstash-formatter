@@ -42,7 +42,6 @@ class LogstashFormatter(logging.Formatter):
         :param json_default: Default JSON representation for unknown types,
                              by default coerce everything to a string
         """
-
         if fmt is not None:
             self._fmt = json.loads(fmt)
         else:
@@ -67,9 +66,7 @@ class LogstashFormatter(logging.Formatter):
         assume an empty message and use the dict as additional
         fields.
         """
-
         fields = record.__dict__.copy()
-
         msg = record.getMessage()
 
         if 'msg' in fields:
@@ -84,14 +81,18 @@ class LogstashFormatter(logging.Formatter):
         if 'exc_text' in fields and not fields['exc_text']:
             fields.pop('exc_text')
 
-        logr = self.defaults.copy()
-
-        logr.update({'@message': msg,
-                     '@timestamp': datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.%fZ'),
-                     '@source_host': self.source_host,
-                     '@fields': self._build_fields(logr, fields)})
-
-        return json.dumps(logr, default=self.json_default, cls=self.json_cls)
+        record_dict = self.defaults.copy()
+        record_dict.update({
+            '@message': msg,
+            '@timestamp': datetime.datetime.utcnow().strftime(
+                '%Y-%m-%dT%H:%M:%S.%fZ'
+            ),
+            '@source_host': self.source_host,
+            '@fields': self._build_fields(record_dict, fields)
+        })
+        return json.dumps(
+            record_dict, default=self.json_default, cls=self.json_cls
+        )
 
     def _build_fields(self, defaults, fields):
         """Return provided fields including any in defaults
@@ -110,4 +111,6 @@ class LogstashFormatter(logging.Formatter):
                 {'foo': 'one'}
         True
         """
-        return dict(list(defaults.get('@fields', {}).items()) + list(fields.items()))
+        return dict(
+            list(defaults.get('@fields', {}).items()) + list(fields.items())
+        )
