@@ -1,5 +1,5 @@
+import io
 import logging
-import StringIO
 import unittest
 
 import logstash_formatter
@@ -8,7 +8,7 @@ import logstash_formatter
 class LogMessagePositionalPlaceholderTest(unittest.TestCase):
 
     def setUp(self):
-        self.stream = StringIO.StringIO()
+        self.stream = io.StringIO()
         handler = logging.StreamHandler(self.stream)
         handler.setFormatter(logstash_formatter.LogstashFormatter())
         handler.setLevel(logging.DEBUG)
@@ -20,23 +20,18 @@ class LogMessagePositionalPlaceholderTest(unittest.TestCase):
         self.assertTrue(
             '"@message": "{}"'.format(msg) in self.stream.getvalue())
 
-
-test_msgs = {
-    'normal_log_message': 'foo',
-    'implicit_positional_placeholder': '{}',
-    'explicit_positional_placeholder': '{0}',
-    'unbalanced_curly_brace': '{'
-}
-
-
-def make_method(msg):
-
-    def test_msg(self):
+    def do_test(self, msg):
         self.log.debug(msg)
         self.assertLogMessage(msg)
 
-    return test_msg
+    def test_normal_log_message(self):
+        self.do_test('foo')
 
+    def test_implicit_positional_placeholder(self):
+        self.do_test('{}')
 
-for name, msg in test_msgs.items():
-    setattr(LogMessagePositionalPlaceholderTest, name, make_method(msg))
+    def test_explicit_positional_placeholder(self):
+        self.do_test('{0}')
+
+    def test_unbalanced_curly_brace(self):
+        self.do_test('{')

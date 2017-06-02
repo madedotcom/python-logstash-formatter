@@ -1,0 +1,3 @@
+-e git+https://github.com/jlee-made/icdiff.git@13abb1ae6120f31edcf856c7468268f1eeff6cea#egg=icdiff-inprocess
+discover
+pytest
