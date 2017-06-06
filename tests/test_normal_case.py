@@ -74,6 +74,7 @@ class Test(TestCase):
         censor('@fields.process', int)
         censor('@fields.relativeCreated', float)
         censor('@fields.thread', int)
+        censor('@source_host', str)
         censor('@timestamp', str)
 
     def test(self):
