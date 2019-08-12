@@ -81,7 +81,8 @@ class Test(TestCase):
         self.log.debug('spam')
         self.assertEqualDiff(
             json.loads(self.stream.getvalue()),
-            {'@fields': 'created': 1496407610.9405103,
+            {'@fields': {'args': [],
+                         'created': 1496407610.9405103,
                          'filename': 'test_normal_case.py',
                          'funcName': 'test',
                          'levelname': 'DEBUG',

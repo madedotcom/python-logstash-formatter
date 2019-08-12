@@ -70,7 +70,6 @@ class LogstashFormatter(logging.Formatter):
         fields = record.__dict__.copy()
         fields.pop('msg', None)
         fields.pop('message', None)
-        fields.pop('args', None)
 
         if 'exc_info' in fields:
             if fields['exc_info']:
