@@ -49,10 +49,9 @@ class Test(TestCase):
 
     def canonicalize(self, json_):
         def lookup(name):
-            if name.startswith('@fields.'):
-                dict_ = json_['@fields']
-                prefix, sep, name = name.partition('@fields.')
-                name, dict_
+            if name.startswith("@fields."):
+                _, _, name = name.partition("@fields.")
+                dict_ = json_["@fields"]
             else:
                 dict_ = json_
             return name, dict_
@@ -76,30 +75,36 @@ class Test(TestCase):
         censor('@fields.thread', int)
         censor('@source_host', str)
         censor('@timestamp', str)
+        censor('@monotonic_timestamp', int)
 
     def test(self):
         self.log.debug('spam')
         self.assertEqualDiff(
             json.loads(self.stream.getvalue()),
-            {'@fields': {'args': [],
-                         'created': 1496407610.9405103,
-                         'filename': 'test_normal_case.py',
-                         'funcName': 'test',
-                         'levelname': 'DEBUG',
-                         'levelno': 10,
-                         'lineno': 50,
-                         'module': 'test_normal_case',
-                         'msecs': 940.5102729797363,
-                         'name': 'test',
-                         'pathname': '/path/to/test_normal_case.py',
-                         'process': 22318,
-                         'processName': 'MainProcess',
-                         'relativeCreated': 1474.8973846435547,
-                         'stack_info': None,
-                         'thread': 139845871032064,
-                         'threadName': 'MainThread'},
-             '@message': 'spam',
-             '@source_host': 'fred',
-             '@timestamp': '2017-06-02T12:46:50.940578Z'},
+            {
+                '@fields': {
+                    'args': [],
+                    'created': 1496407610.9405103,
+                    'filename': 'test_normal_case.py',
+                    'funcName': 'test',
+                    'levelname': 'DEBUG',
+                    'levelno': 10,
+                    'lineno': 50,
+                    'module': 'test_normal_case',
+                    'msecs': 940.5102729797363,
+                    'name': 'test',
+                    'pathname': '/path/to/test_normal_case.py',
+                    'process': 22318,
+                    'processName': 'MainProcess',
+                    'relativeCreated': 1474.8973846435547,
+                    'stack_info': None,
+                    'thread': 139845871032064,
+                    'threadName': 'MainThread',
+                },
+                '@message': 'spam',
+                '@source_host': 'fred',
+                '@timestamp': '2017-06-02T12:46:50.940578Z',
+                "@monotonic_timestamp": 12345676789,
+            },
             canonicalize=self.canonicalize
         )

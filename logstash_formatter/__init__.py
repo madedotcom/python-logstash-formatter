@@ -8,6 +8,7 @@ import socket
 import datetime
 import traceback as tb
 import json
+import time
 
 
 def _default_json_default(obj):
@@ -42,6 +43,7 @@ class LogstashFormatter(logging.Formatter):
         :param json_default: Default JSON representation for unknown types,
                              by default coerce everything to a string
         """
+        self.monotonic_time_offset = time.time_ns() - time.monotonic_ns()
         if fmt is not None:
             self._fmt = json.loads(fmt)
         else:
@@ -87,7 +89,8 @@ class LogstashFormatter(logging.Formatter):
                 '%Y-%m-%dT%H:%M:%S.%fZ'
             ),
             '@source_host': self.source_host,
-            '@fields': self._build_fields(record_dict, fields)
+            '@fields': self._build_fields(record_dict, fields),
+            '@monotonic_timestamp': time.monotonic_ns() + self.monotonic_time_offset,
         })
         return json.dumps(
             record_dict, default=self.json_default, cls=self.json_cls
